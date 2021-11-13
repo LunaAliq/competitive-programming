@@ -1,0 +1,106 @@
+#!/bin/bash
+
+BIN=$(cd $(dirname "$1") && pwd)/$(basename "$1")
+IN_FILE="$2"
+
+if [ ! -f "$IN_FILE" ]; then
+	echo "[Error] no input file '$INPUT'" >&2
+	exit 1
+fi
+
+TESTS=()
+INPUTS=()
+OUTPUTS=()
+
+IN_NAME=
+OUT_NAME=
+NUM=0
+
+while read LINE
+do
+	if [[ "$LINE" =~ ^\#(in|out)\((.+)\)$ ]]; then
+		[ "${BASH_REMATCH[1]}" == "out" ] && \
+			[ "${IN_NAME}" != "${BASH_REMATCH[2]}" ] && \
+			{
+				echo "" >&2
+				echo "[Error] no input matches ${BASH_REMATCH[2]}" >&2
+				exit 1
+			}
+
+		if [ "${BASH_REMATCH[1]}" == "in" ]; then
+			IN_NAME="${BASH_REMATCH[2]}"
+			OUT_NAME=""
+			NUM=${#TESTS[@]}
+			TESTS[${NUM}]="${BASH_REMATCH[2]}"
+			INPUTS[${NUM}]=""
+		elif [ "${BASH_REMATCH[1]}" == "out" ]; then
+			IN_NAME=""
+			OUT_NAME="${BASH_REMATCH[2]}"
+			OUTPUTS[${NUM}]=""
+		else
+			echo "unexpected" >&2
+			exit 1
+		fi
+
+	else
+		if [ -n "${IN_NAME}" ] && [ -z "${OUT_NAME}" ]; then
+			INPUTS[$NUM]+="${LINE}\n"
+		elif [ -n "${OUT_NAME}" ] && [ -z "${IN_NAME}" ]; then
+			OUTPUTS[$NUM]+="${LINE}\n"
+		fi
+	fi
+done < "$IN_FILE"
+
+if [ -n "$IN_NAME" ] || [ -z "$OUT_NAME" ]; then
+	echo "" >&2
+	echo "[Error] wrong status." >&2
+	exit 1
+fi
+
+FAILS=""
+
+for i in $(seq ${#TESTS[@]})
+do
+	i=$((i - 1))
+	echo "test(${TESTS[$i]})"
+	echo "----------------"
+	echo "input"
+	echo "--------"
+	echo -e "${INPUTS[$i]}"
+	echo "--------"
+	echo "DEBUG" >&2
+	echo "--------" >&2
+	ACT_OUT=$(echo -e "${INPUTS[$i]}" | ${BIN})
+	echo "--------" >&2
+	if [ $? -ne 0 ]; then
+		echo "[Error] Error on executing. ${TESTS[$i]}" >&2
+		echo ${ACT_OUT} >&2
+		exit 1
+	fi
+	EXPECTED=${OUTPUTS[$i]%\\n}
+	if [ "$ACT_OUT" == "$EXPECTED" ]; then
+		echo "Succeed."
+	else
+		FAILS="${FAILS}, ${TESTS[$i]}"
+		echo "Fail."
+		echo ""
+		echo "expected-ouetput"
+		echo "--------"
+		echo -e "${EXPECTED}"
+		echo ""
+		echo "actual-output"
+		echo "--------"
+		echo -e "${ACT_OUT}"
+		echo ""
+	fi
+	echo "----------------"
+	echo ""
+done
+
+if [ -z "$FAILS" ]; then
+	echo "ALL TESTS HAVE SUCCEEDED."
+else
+	echo "FAILS ON TESTS (${FAILS#, })"
+fi
+
+exit 0

@@ -1,0 +1,154 @@
+int ast(bool f){
+  if (f){
+    cout << "Succeed" << "\n";
+    return 0;
+  } else {
+    cout << "Fail" << "\n";
+    return 1;
+  }
+}
+
+int test_debug_print(){
+  printf("TEST-START\n");
+  eprintf("  This is %s.\n", "LOCAL");
+  printf("TEST-END\n");
+  return 0;
+}
+
+int test_rp_1(){
+  int sum = 0;
+  REP(i, 10){
+    sum += i;
+  }
+  eprintf("%d\n", sum);
+  return ast(sum == 45);
+}
+
+int test_rp_2(){
+  int sum = 45;
+  int i = 12;
+  REP(j, 10){
+    sum -= j;
+  }
+  eprintf("%d\n", sum);
+  return ast(sum == 0);
+}
+
+int test_rp_3(){
+  int a[10];
+  REP(i, 10){
+    epf("%d, ", i);
+    if(i <= 0){
+      a[i] = 1;
+    }else{
+      a[i] = a[i-1] + 1;
+    }
+  }
+  eprintf("%d\n", a[9]);
+  return ast(a[9] == 10);
+}
+
+int test_rrp(){
+  int a[10];
+  a[0] = 0;
+  RREP(i, 10){
+    epf("%d, ", i);
+    if(i >= 9){
+      a[i] = 10;
+    }else{
+      a[i] = a[i+1] - 1;
+    }
+  }
+  eprintf("%d\n", a[0]);
+  return ast(a[0] == 1);
+}
+
+int test_chmax(){
+  int ma = 10;
+  bool ret = true;
+  ret = ret & chmax(ma, 15);
+  ret = ret & (ma == 15);
+  ret = ret & (! chmax(ma, 12));
+  ret = ret & (ma == 15);
+  return ast(ret);
+}
+
+int test_chmin(){
+  int mi = 10;
+  bool ret = true;
+  ret = ret & (! chmin(mi, 15));
+  ret = ret & (mi == 10);
+  ret = ret & chmin(mi, 2);
+  ret = ret & (mi == 2);
+  return ast(ret);
+}
+
+int test_modint_1(){
+  modint<3> a = 4;
+  a = a + 3;
+  return ast(a == 1 && a == 4);
+}
+
+int test_modint_2(){
+  modint<3> a = 4;
+  a = a - 5;
+  return ast(a == 2 && a == 5);
+}
+
+int test_modint_3(){
+  modint<3> a = 2;
+  a = a * 5;
+  return ast(a == 1 && a == 4);
+}
+
+int main(){
+  int fail_count = 0;
+  cout << "TEST-DEBUG-PRINT" << "\n";
+  cout << "--------" << "\n";
+  fail_count += test_debug_print();
+  cout << "--------" << "\n";
+  cout << "TEST-REP-1" << "\n";
+  cout << "--------" << "\n";
+  fail_count += test_rp_1();
+  cout << "--------" << "\n";
+  cout << "TEST-REP-2" << "\n";
+  cout << "--------" << "\n";
+  fail_count += test_rp_2();
+  cout << "--------" << "\n";
+  cout << "TEST-REP-3" << "\n";
+  cout << "--------" << "\n";
+  fail_count += test_rp_3();
+  cout << "--------" << "\n";
+  cout << "TEST-RREP" << "\n";
+  cout << "--------" << "\n";
+  fail_count += test_rrp();
+  cout << "--------" << "\n";
+  cout << "TEST-CHMAX" << "\n";
+  cout << "--------" << "\n";
+  fail_count += test_chmax();
+  cout << "--------" << "\n";
+  cout << "TEST-CHMIN" << "\n";
+  cout << "--------" << "\n";
+  fail_count += test_chmin();
+  cout << "--------" << "\n";
+  cout << "TEST-MODINT-1" << "\n";
+  cout << "--------" << "\n";
+  fail_count += test_modint_1();
+  cout << "--------" << "\n";
+  cout << "TEST-MODINT-2" << "\n";
+  cout << "--------" << "\n";
+  fail_count += test_modint_2();
+  cout << "--------" << "\n";
+  cout << "TEST-MODINT-3" << "\n";
+  cout << "--------" << "\n";
+  fail_count += test_modint_3();
+  cout << "----------------" << "\n";
+
+  if (fail_count > 0){
+    cout << "Some Tests Failed." << "\n";
+    return 1;
+  } else {
+    cout << "All Tests Succeeded." << "\n";
+    return 0;
+  }
+}
