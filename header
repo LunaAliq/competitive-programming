@@ -1,11 +1,20 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+// repeat
+// i: variable name
+// n: times
 #define REP(i, n) for(int i=0, i##_len=(n); i<i##_len; ++i)
+// reversed repeat
 #define RREP(i, n) for(int i=n-1; i>=0; --i)
 
+// memset
+// var: variant name
+// val: fill with
 #define MEMSET(var, val) memset((var), val, sizeof(var))
 
+// only if this is executed in the LOCAL machine,
+// eprintf and epf output debug print to stderr
 #ifdef LOCAL
   #define eprintf(...) fprintf(stderr, __VA_ARGS__)
   #define epf(...) fprintf(stderr, __VA_ARGS__)
@@ -14,9 +23,13 @@ using namespace std;
   #define epf(...) 42
 #endif
 
+// types
 typedef long long ll;
-//typedef pair<int, int> P;
+typedef pair<int, int> P;
 
+// type modint
+// define a with order 3 like
+// `modint<3> a = 4;`
 template<std::uint_fast64_t mod> class modint {
 private:
   using u64 = std::uint_fast64_t;
@@ -46,6 +59,9 @@ public:
   friend ostream& operator<<(ostream &os, const modint<mod> &x){ os << x._num; return os; }
 };
 
+// change `a` to max of (a, b)
+// a: variable name
+// b: value
 template<class T>bool chmax(T &a, const T &b){
   if(a < b){
     a = b;
@@ -54,6 +70,7 @@ template<class T>bool chmax(T &a, const T &b){
   return 0;
 }
 
+// change `a` to min of (a, b)
 template<class T>bool chmin(T &a, const T &b){
   if(b < a){
     a = b;
@@ -62,13 +79,17 @@ template<class T>bool chmin(T &a, const T &b){
   return 0;
 }
 
+// gcd
 int gcd(int a, int b){
   return b?gcd(b,a%b):a;
 }
 
+// grid diff: go to x
 int dx[4] = {1, 0, -1, 0};
+// grid diff: go to y
 int dy[4] = {0, 1, 0, -1};
 
+// start with this
 /*
 int main(){
 

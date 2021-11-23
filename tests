@@ -68,7 +68,7 @@ do
 	echo "--------"
 	echo -e "${INPUTS[$i]}"
 	echo "--------"
-	echo "DEBUG" >&2
+	echo "STDERR" >&2
 	echo "--------" >&2
 	ACT_OUT=$(echo -e "${INPUTS[$i]}" | ${BIN})
 	echo "--------" >&2

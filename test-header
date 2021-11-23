@@ -1,4 +1,4 @@
-int ast(bool f){
+int my_assert(bool f){
   if (f){
     cout << "Succeed" << "\n";
     return 0;
@@ -21,7 +21,7 @@ int test_rp_1(){
     sum += i;
   }
   eprintf("%d\n", sum);
-  return ast(sum == 45);
+  return my_assert(sum == 45);
 }
 
 int test_rp_2(){
@@ -31,7 +31,7 @@ int test_rp_2(){
     sum -= j;
   }
   eprintf("%d\n", sum);
-  return ast(sum == 0);
+  return my_assert(sum == 0);
 }
 
 int test_rp_3(){
@@ -45,7 +45,7 @@ int test_rp_3(){
     }
   }
   eprintf("%d\n", a[9]);
-  return ast(a[9] == 10);
+  return my_assert(a[9] == 10);
 }
 
 int test_rrp(){
@@ -60,7 +60,7 @@ int test_rrp(){
     }
   }
   eprintf("%d\n", a[0]);
-  return ast(a[0] == 1);
+  return my_assert(a[0] == 1);
 }
 
 int test_chmax(){
@@ -70,7 +70,7 @@ int test_chmax(){
   ret = ret & (ma == 15);
   ret = ret & (! chmax(ma, 12));
   ret = ret & (ma == 15);
-  return ast(ret);
+  return my_assert(ret);
 }
 
 int test_chmin(){
@@ -80,25 +80,25 @@ int test_chmin(){
   ret = ret & (mi == 10);
   ret = ret & chmin(mi, 2);
   ret = ret & (mi == 2);
-  return ast(ret);
+  return my_assert(ret);
 }
 
 int test_modint_1(){
   modint<3> a = 4;
   a = a + 3;
-  return ast(a == 1 && a == 4);
+  return my_assert(a == 1 && a == 4);
 }
 
 int test_modint_2(){
   modint<3> a = 4;
   a = a - 5;
-  return ast(a == 2 && a == 5);
+  return my_assert(a == 2 && a == 5);
 }
 
 int test_modint_3(){
   modint<3> a = 2;
   a = a * 5;
-  return ast(a == 1 && a == 4);
+  return my_assert(a == 1 && a == 4);
 }
 
 int main(){
