@@ -1,0 +1,15 @@
+#in(1)
+6
+ACADCB
+#out(1)
+ABCACD
+#in(2)
+6
+ACDACB
+#out(2)
+ABCACD
+#in(3)
+5
+ABCBA
+#out(3)
+AABBC
